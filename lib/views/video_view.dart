@@ -3,7 +3,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import '../class/Video_URL.dart';
 import '../class/custom_chewie_controller.dart';
 
@@ -18,6 +18,7 @@ class VideoviewState extends State<Videoview> {
   late VideoPlayerController videoPlayerController;
   ChewieController? chewieController;
   Future<void>? initializeVideoPlayerFuture;
+  final dio = Dio();
 
   @override
   void initState() {
@@ -51,7 +52,8 @@ class VideoviewState extends State<Videoview> {
         }
         final text = textLines.join('\n');
 
-        subtitles.add(Subtitle(index: i, start: startTime, end: endTime, text: text));
+        subtitles.add(
+            Subtitle(index: i, start: startTime, end: endTime, text: text));
       }
     }
     return subtitles;
@@ -75,8 +77,9 @@ class VideoviewState extends State<Videoview> {
 
     initializeVideoPlayerFuture = videoPlayerController.initialize();
     await initializeVideoPlayerFuture;
-    final subtitleResponse = await http.get(Uri.parse('${URL().baseURL}/${URL().foldername}/${URL().filename}.srt'));
-    final subtitleContent = utf8.decode(subtitleResponse.bodyBytes);
+    final subtitleResponse = await dio
+        .get('${URL().baseURL}/${URL().foldername}/${URL().filename}.srt');
+    final subtitleContent = utf8.decode(subtitleResponse.data);
     final subtitles = parseSubtitles(subtitleContent);
     setState(() {
       chewieController = ChewieController(
@@ -98,10 +101,12 @@ class VideoviewState extends State<Videoview> {
           ),
         ),
         customControls: const CustomCupertinoControls(
-          backgroundColor: Colors.transparent, iconColor: Colors.white, showPlayButton: true,
+          backgroundColor: Colors.transparent,
+          iconColor: Colors.white,
+          showPlayButton: true,
         ),
       );
-      setState((){});
+      setState(() {});
     });
   }
 
@@ -118,36 +123,36 @@ class VideoviewState extends State<Videoview> {
       backgroundColor: Colors.transparent,
       body: Center(
         child: chewieController != null &&
-            chewieController!.videoPlayerController.value.isInitialized
+                chewieController!.videoPlayerController.value.isInitialized
             ? Chewie(
-          controller: chewieController!,
-        )
+                controller: chewieController!,
+              )
             : FutureBuilder<void>(
-          future: initializeVideoPlayerFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(color: Colors.black),
-                  SizedBox(height: 8),
-                  Text('로딩중')
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return const Text('Error');
-            } else {
-              return const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 20),
-                  Text('로딩중'),
-                ],
-              );
-            }
-          },
-        ),
+                future: initializeVideoPlayerFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(color: Colors.black),
+                        SizedBox(height: 8),
+                        Text('로딩중')
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Text('Error');
+                  } else {
+                    return const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 20),
+                        Text('로딩중'),
+                      ],
+                    );
+                  }
+                },
+              ),
       ),
     );
   }
