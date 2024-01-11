@@ -28,7 +28,7 @@ class FavoritePageState extends State<CategoryCard> {
     try {
       final fileList = await fetchFileList();
       favoriteController.setFileList(fileList);
-      Get.to(const FolderScreen());
+      Get.to(FolderScreen(), arguments: widget.programTitle);
     } catch (e) {
       // 오류 처리
       print('Failed to fetch file list: $e');

@@ -3,7 +3,7 @@ import '../class/file.dart';
 
 class FavoriteController extends GetxController {
   RxList<String> favorites = <String>[].obs;
-  RxList<Folder> fileList = <Folder>[].obs; // 파일 목록을 저장하는 RxList 추가
+  RxList<Folder> fileList = <Folder>[].obs;
 
   void toggleFavorite(String title) {
     if (favorites.contains(title)) {

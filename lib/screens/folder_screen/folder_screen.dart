@@ -4,6 +4,7 @@ import 'package:video_player/video_player.dart';
 import '../../class/file.dart';
 import '../../controller/item_controller.dart';
 import '../../class/Video_URL.dart';
+import '../../views/video_view.dart';
 
 class FolderScreen extends StatefulWidget {
   const FolderScreen({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class FolderScreen extends StatefulWidget {
 class FolderScreenState extends State<FolderScreen> {
   late VideoPlayerController _controller;
   final FavoriteController favoriteController = Get.find();
+  var category = Get.arguments;
   List<Folder> fileList = [];
 
   @override
@@ -35,7 +37,7 @@ class FolderScreenState extends State<FolderScreen> {
 
   Future<void> _playVideo(String videoUrl) async {
     URL().videoURL = videoUrl;
-    Get.back();
+    Get.to(const Videoview(), arguments: category);
   }
 
   @override
@@ -50,7 +52,7 @@ class FolderScreenState extends State<FolderScreen> {
           'Stream Play',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
       ),
       body: fileList.isEmpty
@@ -99,7 +101,7 @@ class FolderScreenState extends State<FolderScreen> {
                                 title: Text(file.name),
                                 onTap: () {
                                   String videoUrl =
-                                      '${URL().baseURL}/${folder.name}/${file.name}';
+                                      '${URL().baseURL}/static/video/${category}/${folder.name}/${file.name}';
                                   URL().foldername = folder.name;
                                   int extensionIndex =
                                       file.name.lastIndexOf('.');

@@ -1,6 +1,7 @@
-import 'dart:convert';
+//import 'dart:convert';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+//import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
@@ -73,20 +74,24 @@ class VideoviewState extends State<Videoview> {
   }
 
   Future<void> initializeVideoPlayer() async {
-    videoPlayerController = VideoPlayerController.network(URL().videoURL);
+    //var category = Get.arguments;
+
+    videoPlayerController =
+        VideoPlayerController.networkUrl(Uri.parse(URL().videoURL));
 
     initializeVideoPlayerFuture = videoPlayerController.initialize();
     await initializeVideoPlayerFuture;
-    final subtitleResponse = await dio
-        .get('${URL().baseURL}/${URL().foldername}/${URL().filename}.srt');
-    final subtitleContent = utf8.decode(subtitleResponse.data);
-    final subtitles = parseSubtitles(subtitleContent);
+
+    //final subtitleResponse = await dio.get('${URL().baseURL}/static/video/${category}/${URL().foldername}/${URL().filename}.srt');
+
+    //final subtitleContent = utf8.decode(subtitleResponse.data);
+    //final subtitles = parseSubtitles(subtitleContent);
     setState(() {
       chewieController = ChewieController(
         videoPlayerController: videoPlayerController,
         autoPlay: true,
         looping: false,
-        subtitle: Subtitles(subtitles),
+        //subtitle: Subtitles(subtitles),
         subtitleBuilder: (context, subtitle) => Container(
           padding: const EdgeInsets.all(20.0),
           alignment: Alignment.center,

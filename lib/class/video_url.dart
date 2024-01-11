@@ -7,6 +7,7 @@ class URL {
 
   URL._internal();
   String baseURL = 'https://ailyproject.shop';
+  String route = 'static/video/';
   String foldername = '';
   String filename = '';
   String videoURL = '';

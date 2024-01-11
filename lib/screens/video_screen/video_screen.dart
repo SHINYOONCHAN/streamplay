@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:video_player/video_player.dart';
-import '../../class/file.dart';
 import '../../items/program_card.dart';
 import '../../items/recent_card.dart';
-import '../../views/video_view.dart';
-import '../../class/Video_URL.dart';
 
 class VideoScreen extends StatefulWidget {
   const VideoScreen({Key? key}) : super(key: key);
@@ -17,41 +14,16 @@ class VideoScreen extends StatefulWidget {
 class VideoScreenState extends State<VideoScreen> {
   late VideoPlayerController _controller;
   Dio dio = Dio();
-  List<Folder> fileList = [];
 
   @override
   void initState() {
     super.initState();
-    // fetchFileList().then((result) {
-    //   setState(() {
-    //     fileList = result;
-    //   });
-    // }).catchError((error) {
-    //   //
-    // });
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  // Future<void> _refreshFileList() async {
-  //   try {
-  //     List<Folder> result = await fetchFileList();
-  //     setState(() {
-  //       fileList = result;
-  //     });
-  //   } catch (error) {
-  //     //
-  //   }
-  // }
-
-  Future<void> _playVideo(String videoUrl) async {
-    URL().videoURL = videoUrl;
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const Videoview()));
   }
 
   @override
@@ -66,13 +38,6 @@ class VideoScreenState extends State<VideoScreen> {
         backgroundColor: mainColor,
         title: const Text('Stream Play',
             style: TextStyle(fontSize: 20, color: Colors.white)),
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.refresh),
-              color: Colors.white,
-              onPressed: () {} //_refreshFileList,
-              ),
-        ],
         iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0,
       ),
